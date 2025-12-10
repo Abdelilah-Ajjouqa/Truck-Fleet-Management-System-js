@@ -1,7 +1,7 @@
-import httpError from "../config/httpError.js";
+import HttpError from "../config/HttpError.js";
 
 const ErrorHandler = (err, req, res, next) => {
-    if (err instanceof httpError) {
+    if (err instanceof HttpError) {
         res.status(err.statusCode).json({ message: err.message });
     } else {
         res.status(500).json({ message: err.message });

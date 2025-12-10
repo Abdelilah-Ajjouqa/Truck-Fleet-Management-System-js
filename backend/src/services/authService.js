@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { validateRegister, validateLogin } from '../validation/authValidate.js';
+import HttpError from '../config/HttpError.js';
 
 class AuthService {
     static #generateToken(user) {
@@ -19,14 +20,18 @@ class AuthService {
     static async register(userData) {
         const validationError = validateRegister(userData);
         if (validationError) {
-            throw new Error(validationError);
+            throw new HttpError(validationError);
         }
 
-        const { firstName, lastName, email, password } = userData;
+        const { firstName, lastName, email, password, confirmPassword } = userData;
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            throw new Error('User already exists');
+            throw new HttpError('User already exists', 409);
+        }
+
+        if(password !== confirmPassword){
+            throw new HttpError('password or confirm password don\'t match', 401);
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -56,17 +61,17 @@ class AuthService {
     static async login(email, password) {
         const validationError = validateLogin({ email, password });
         if (validationError) {
-            throw new Error(validationError);
+            throw new HttpError(validationError);
         }
 
         const user = await User.findOne({ email });
         if (!user) {
-            throw new Error('Invalid credentials');
+            throw new HttpError('Invalid credentials', 404);
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            throw new Error('Invalid credentials');
+            throw new HttpError('Invalid credentials', 401)
         }
 
         const token = this.#generateToken(user);
