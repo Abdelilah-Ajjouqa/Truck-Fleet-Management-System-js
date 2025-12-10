@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import MongodbConnection from './config/MongodbConnection.js';
-import ErrorHandler from './middleware/error.middleware.js';
+import ErrorHandler from './middleware/errorMiddleware.js';
 
 dotenv.config();
 
