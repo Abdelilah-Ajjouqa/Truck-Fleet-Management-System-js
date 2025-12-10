@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import MongodbConnection from './config/MongodbConnection.js';
+import ErrorHandler from './middleware/error.middleware.js';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
     res.send('Truck API is running...');
 });
 
+app.use(ErrorHandler);
 process.once('SIGINT', db.disconnect);
 
 export default app;
