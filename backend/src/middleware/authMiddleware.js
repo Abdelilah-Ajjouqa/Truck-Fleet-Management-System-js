@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import HttpError from '../config/HttpError.js';
 import User from '../models/User.js';
 
-export const authMiddleware = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     let token;
 
     try {
@@ -28,3 +28,5 @@ export const authMiddleware = async (req, res, next) => {
         next(error);
     }
 };
+
+export default authMiddleware;

@@ -30,9 +30,9 @@ class AuthService {
             throw new HttpError('User already exists', 409);
         }
 
-        if(password !== confirmPassword){
-            throw new HttpError('password or confirm password don\'t match', 401);
-        }
+        // if(password !== confirmPassword){
+        //     throw new HttpError('password or confirm password don\'t match', 401);
+        // }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 

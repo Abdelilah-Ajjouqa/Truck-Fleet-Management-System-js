@@ -20,4 +20,10 @@ class AuthController {
             next(error);
         }
     }
+
+    static me = (req, res) => {
+        res.status(200).json({ me: req.user })
+    }
 }
+
+export default AuthController;
