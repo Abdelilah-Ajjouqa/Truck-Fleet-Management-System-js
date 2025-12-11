@@ -13,7 +13,6 @@ const useApi = (url) => {
             .then((res) => { setData(res.data) })
             .catch((err) => { setError(err); setData(null); })
             .finally(() => { setLoading(false) })
-
     }, [url])
 
     return { data, loading, error }
