@@ -23,7 +23,7 @@ class AuthService {
             throw new HttpError(validationError);
         }
 
-        const { firstName, lastName, email, password, confirmPassword } = userData;
+        const { firstName, lastName, email, password } = userData;
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
