@@ -11,7 +11,7 @@ const Home = () => {
                     className="absolute inset-0 z-0 h-full w-full bg-cover bg-center bg-no-repeat"
                     style={{ backgroundImage: `url(${bgImage})` }}
                 >
-                    <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/60 to-gray-900/90"></div>
+                    <div className="absolute inset-0 bg-linear-to-b from-gray-900/80 via-gray-900/60 to-gray-900/90"></div>
                 </div>
 
                 <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center text-white">
@@ -25,10 +25,10 @@ const Home = () => {
 
                     {/* GUEST-ONLY CTA */}
                     <div className="flex gap-4 animate-fade-in-up">
-                        <Link to="/login" className="btn-primary">
+                        <Link to="/login" className="bg-white text-black py-2 px-3.5 rounded-md hover:scale-105 duration-300 shadow-md shadow-gray">
                             Employee Login
                         </Link>
-                        <Link to="/register" className="btn-secondary">
+                        <Link to="/register" className="bg-black text-white py-2 px-3.5 rounded-md hover:scale-105 duration-300 shadow-md shadow-gray">
                             Join the Network
                         </Link>
                     </div>

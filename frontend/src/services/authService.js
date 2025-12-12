@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = import.meta.env.BACKEND_URL;
+const url = import.meta.env.BACKEND_URL || 'http://localhost:3002';
 
 export const register = async (userData) => {
     try {
@@ -12,8 +12,8 @@ export const register = async (userData) => {
             return null;
         }
     } catch (error) {
-        console.error(error);
-        throw new Error('cannot register() ', error.message);
+        const errorMessage = error.response?.data?.message || error.message || 'Registration failed';
+        throw new Error(`Cannot register: ${errorMessage}`);
     }
 }
 
@@ -27,7 +27,7 @@ export const login = async (userData) => {
             return null;
         }
     } catch (error) {
-        console.error(error);
-        throw new Error('cannot login() ', error.message);
+        const errorMessage = error.response?.data?.message || error.message || 'Login failed';
+        throw new Error(`Cannot login: ${errorMessage}`);
     }
 }
