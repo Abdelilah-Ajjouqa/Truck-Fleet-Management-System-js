@@ -1,6 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import MongodbConnection from './config/MongodbConnection.js';
+import ErrorHandler from './middleware/errorMiddleware.js';
+import authRoutes from './routes/auth.routes.js';
 
 dotenv.config();
 
@@ -10,12 +13,17 @@ const db = new MongodbConnection(dbUrl);
 
 db.connect();
 app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:5173',
+}))
 
+app.use("/api/auth", authRoutes);
 
 app.get('/', (req, res) => {
     res.send('Truck API is running...');
 });
 
+app.use(ErrorHandler);
 process.once('SIGINT', db.disconnect);
 
 export default app;
