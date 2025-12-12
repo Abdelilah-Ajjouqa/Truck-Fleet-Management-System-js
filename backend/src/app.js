@@ -4,6 +4,7 @@ import cors from 'cors';
 import MongodbConnection from './config/MongodbConnection.js';
 import ErrorHandler from './middleware/errorMiddleware.js';
 import authRoutes from './routes/auth.routes.js';
+import truckRoutes from './routes/truck.routes.js';
 
 dotenv.config();
 
@@ -18,9 +19,10 @@ app.use(cors({
 }))
 
 app.use("/api/auth", authRoutes);
+app.use('/truck', truckRoutes);
 
-app.get('/', (req, res) => {
-    res.send('Truck API is running...');
+app.get('/', () => {
+    console.log('app running on : http://localhost:3002');
 });
 
 app.use(ErrorHandler);
