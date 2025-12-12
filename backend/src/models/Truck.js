@@ -28,6 +28,13 @@ const truckSchema = new mongoose.Schema({
         min: 0,
         max: 100
     },
+    tireCondition: {
+        type: String,
+        enum: ['GOOD', 'WORN', 'CRITICAL'],
+        default: 'GOOD'
+    },
+    lastMaintenanceDate: { type: Date },
+    lastMaintenanceMileage: { type: Number, default: 0 },
     assignedDriver: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
