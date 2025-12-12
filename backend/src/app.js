@@ -3,8 +3,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import MongodbConnection from './config/MongodbConnection.js';
 import ErrorHandler from './middleware/errorMiddleware.js';
-import authRoutes from './routes/auth.routes.js';
-import truckRoutes from './routes/truck.routes.js';
+import AuthRoutes from './routes/auth.routes.js';
+import TruckRoutes from './routes/truck.routes.js';
+import TripRouter from './routes/trip.routes.js';
 
 dotenv.config();
 
@@ -16,10 +17,11 @@ db.connect();
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:5173',
-}))
+}));
 
-app.use("/api/auth", authRoutes);
-app.use('/truck', truckRoutes);
+app.use("/api/auth", AuthRoutes);
+app.use('/api/truck', TruckRoutes);
+app.use('/api/trip', TripRouter);
 
 app.get('/', () => {
     console.log('app running on : http://localhost:3002');
