@@ -6,6 +6,11 @@ const tripSchema = new mongoose.Schema({
         ref: 'Truck',
         required: true
     },
+    trailer: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Trailer', 
+        required: true 
+    },
     driver: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

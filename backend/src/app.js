@@ -6,6 +6,7 @@ import ErrorHandler from './middleware/errorMiddleware.js';
 import AuthRoutes from './routes/auth.routes.js';
 import TruckRoutes from './routes/truck.routes.js';
 import TripRouter from './routes/trip.routes.js';
+import TrailerRoutes from './routes/trailer.routes.js';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(cors({
 
 app.use("/api/auth", AuthRoutes);
 app.use('/api/truck', TruckRoutes);
+app.use('/api/trailers', TrailerRoutes)
 app.use('/api/trip', TripRouter);
 
 app.get('/', () => {

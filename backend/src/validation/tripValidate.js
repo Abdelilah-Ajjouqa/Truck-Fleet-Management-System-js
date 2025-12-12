@@ -3,6 +3,7 @@ import Joi from 'joi';
 // For Admin creating a trip
 const createTripSchema = Joi.object({
     truckId: Joi.string().required(),
+    trailerId: Joi.string().required(),
     driverId: Joi.string().required(),
     departure: Joi.string().required(),
     destination: Joi.string().required(),

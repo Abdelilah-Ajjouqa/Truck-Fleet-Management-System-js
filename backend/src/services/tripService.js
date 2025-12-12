@@ -1,4 +1,5 @@
 import Trip from '../models/Trip.js';
+import Trailer from '../models/Trailer.js';
 import Truck from '../models/Truck.js';
 import User from '../models/User.js';
 import HttpError from '../config/HttpError.js';
@@ -15,6 +16,9 @@ class TripService {
             throw new HttpError('Truck is not available', 409);
         }
 
+        const trailer = await Trailer.findById(tripData.trailerId);
+        if (!trailer || trailer.status !== 'AVAILABLE') throw new HttpError('Trailer unavailable', 409);
+
         const driver = await User.findById(tripData.driverId);
         if (!driver || driver.role !== 'DRIVER') {
             throw new HttpError('Invalid driver selected', 400);
@@ -22,6 +26,7 @@ class TripService {
 
         const newTrip = await Trip.create({
             truck: tripData.truckId,
+            trailer: tripData.trailerId,
             driver: tripData.driverId,
             departure: tripData.departure,
             destination: tripData.destination,
@@ -31,7 +36,9 @@ class TripService {
         });
 
         truck.status = 'RESERVED';
+        trailer.status = 'RESERVED';
         await truck.save();
+        await trailer.save();
 
         return newTrip;
     }
@@ -48,12 +55,15 @@ class TripService {
         }
 
         const truck = await Truck.findById(trip.truck._id);
+        const trailer = await Trailer.findById(trip.trailer);
 
         if (updateData.status === 'IN_PROGRESS') {
             if (trip.status !== 'PLANNED') throw new HttpError('Trip already started or finished', 400);
 
             trip.status = 'IN_PROGRESS';
+
             truck.status = 'IN_TRANSIT';
+            trailer.status = 'IN_TRANSIT';
         }
         else if (updateData.status === 'COMPLETED') {
             if (trip.status !== 'IN_PROGRESS') throw new HttpError('Trip must be in progress to complete', 400);
@@ -70,10 +80,13 @@ class TripService {
             truck.status = 'AVAILABLE';
             truck.currentMileage = updateData.currentMileage;
             truck.fuelLevel = updateData.fuelLevel;
+
+            trailer.status = 'AVAILABLE';
         }
 
         await trip.save();
         await truck.save();
+        await trailer.save();
 
         return trip;
     }
