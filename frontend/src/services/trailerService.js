@@ -9,31 +9,31 @@ const getToken = () => {
     };
 };
 
-// 1. GET /api/trailers/
+// GET /api/trailers/
 const getAllTrailers = async () => {
     const response = await axios.get(API_URL, getToken());
     return response.data;
 };
 
-// 2. GET /api/trailers/:id
+// GET /api/trailers/:id
 const getTrailerById = async (id) => {
     const response = await axios.get(`${API_URL}/${id}`, getToken());
     return response.data;
 };
 
-// 3. POST /api/trailers/
+// POST /api/trailers/
 const createTrailer = async (trailerData) => {
     const response = await axios.post(API_URL, trailerData, getToken());
     return response.data;
 };
 
-// 4. PUT /api/trailers/:id
+// PUT /api/trailers/:id
 const updateTrailer = async (id, trailerData) => {
     const response = await axios.put(`${API_URL}/${id}`, trailerData, getToken());
     return response.data;
 };
 
-// 5. DELETE /api/trailers/:id
+// DELETE /api/trailers/:id
 const deleteTrailer = async (id) => {
     const response = await axios.delete(`${API_URL}/${id}`, getToken());
     return response.data;
