@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = import.meta.env.BACKEND_URL || 'http://localhost:3002';
+const url = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
 
 export const register = async (userData) => {
     try {

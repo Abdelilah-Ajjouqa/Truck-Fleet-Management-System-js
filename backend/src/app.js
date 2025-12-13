@@ -21,9 +21,9 @@ app.use(cors({
 }));
 
 app.use("/api/auth", AuthRoutes);
-app.use('/api/truck', TruckRoutes);
+app.use('/api/trucks', TruckRoutes);
 app.use('/api/trailers', TrailerRoutes)
-app.use('/api/trip', TripRouter);
+app.use('/api/trips', TripRouter);
 
 app.get('/', () => {
     console.log('app running on : http://localhost:3002');
