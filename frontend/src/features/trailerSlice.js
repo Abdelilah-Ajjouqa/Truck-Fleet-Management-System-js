@@ -29,7 +29,7 @@ export const createTrailer = createAsyncThunk('trailers/create', async (data, th
     }
 });
 
-// Update (NEW)
+// Update
 export const updateTrailer = createAsyncThunk('trailers/update', async ({ id, data }, thunkAPI) => {
     try {
         return await trailerService.updateTrailer(id, data);
@@ -39,7 +39,7 @@ export const updateTrailer = createAsyncThunk('trailers/update', async ({ id, da
     }
 });
 
-// Delete (NEW)
+// Delete
 export const deleteTrailer = createAsyncThunk('trailers/delete', async (id, thunkAPI) => {
     try {
         await trailerService.deleteTrailer(id);
@@ -54,7 +54,7 @@ export const trailerSlice = createSlice({
     name: 'trailer',
     initialState,
     reducers: {
-        reset: (state) => {
+        resetAll: (state) => {
             state.isLoading = false;
             state.isSuccess = false;
             state.isError = false;
@@ -94,5 +94,5 @@ export const trailerSlice = createSlice({
     }
 });
 
-export const { reset } = trailerSlice.actions;
+export const { resetAll } = trailerSlice.actions;
 export default trailerSlice.reducer;
