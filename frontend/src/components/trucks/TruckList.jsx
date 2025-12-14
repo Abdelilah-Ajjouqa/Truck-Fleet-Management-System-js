@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTrucks, deleteTruck } from '../../features/truckSlice';
 import { Plus, Trash2, Edit, Truck as TruckIcon } from 'lucide-react';
+import TruckModal from './TruckModal';
 
 const TruckList = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedTruck, setSelectedTruck] = useState(null);
     const dispatch = useDispatch();
     const { trucks, isLoading, isError, message } = useSelector((state) => state.trucks);
 
@@ -27,12 +30,22 @@ const TruckList = () => {
         }
     };
 
+    const openAddModal = () => {
+        setSelectedTruck(null);
+        setIsModalOpen(true);
+    };
+
+    const openEditModal = (truck) => {
+        setSelectedTruck(truck);
+        setIsModalOpen(true);
+    };
+
     if (isLoading) return <div className="p-8 text-center text-gray-500">Loading fleet data...</div>;
     if (isError) return <div className="p-8 text-center text-red-500">Error: {message}</div>;
 
     return (
         <div className="space-y-6">
-            
+
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -42,8 +55,9 @@ const TruckList = () => {
                     </h1>
                     <p className="text-gray-500 text-sm mt-1">Manage your trucks, mileage, and maintenance status.</p>
                 </div>
-                
+
                 <button
+                    onClick={openAddModal}
                     className="flex items-center gap-2 bg-black hover:bg-zinc-800 text-white px-4 py-2 rounded-lg transition-colors shadow-lg"
                 >
                     <Plus size={20} />
@@ -77,10 +91,12 @@ const TruckList = () => {
                                         </td>
                                         <td className="px-6 py-4 font-mono">{truck.currentMileage.toLocaleString()} km</td>
                                         <td className="px-6 py-4 flex justify-center gap-3">
-                                            <button className="text-gray-400 hover:text-blue-600 transition-colors">
+                                            <button
+                                                onClick={() => openEditModal(truck)}
+                                                className="text-gray-400 hover:text-blue-600 transition-colors">
                                                 <Edit size={18} />
                                             </button>
-                                            <button 
+                                            <button
                                                 onClick={() => handleDelete(truck._id)}
                                                 className="text-gray-400 hover:text-red-600 transition-colors"
                                             >
@@ -100,6 +116,11 @@ const TruckList = () => {
                     </table>
                 </div>
             </div>
+            <TruckModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                truckToEdit={selectedTruck}
+            />
         </div>
     );
 };

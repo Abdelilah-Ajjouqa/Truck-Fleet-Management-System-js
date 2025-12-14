@@ -8,9 +8,9 @@ const router = express.Router();
 router.get('/', authMiddleware, TruckController.getAllTrucks);
 router.get('/:id', authMiddleware, TruckController.getTruckById);
 
-router.post('/', isAdmin, authMiddleware, TruckController.createTruck);
-router.put('/:id', isAdmin, authMiddleware, TruckController.updateTruck);
+router.post('/', authMiddleware, isAdmin, TruckController.createTruck);
+router.put('/:id', authMiddleware, isAdmin, TruckController.updateTruck);
 
-router.delete('/:id', isAdmin, authMiddleware, TruckController.deleteTruck);
+router.delete('/:id', authMiddleware, isAdmin, TruckController.deleteTruck);
 
 export default router;
