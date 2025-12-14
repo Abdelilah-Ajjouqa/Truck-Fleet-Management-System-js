@@ -31,16 +31,11 @@ class TruckService {
         return truck;
     }
 
-    static async updateTruck(id, updateData) {
-        const updatedTruck = await Truck.findByIdAndUpdate(
-            id,
-            updateData
-        );
-
-        if (!updatedTruck) {
-            throw new HttpError('Truck not found', 404);
-        }
-        return updatedTruck;
+    static async updateTruck(id, data) {
+        const truck = await Truck.findByIdAndUpdate(id, data, { new: true });
+        
+        if (!truck) throw new HttpError('Truck not found', 404);
+        return truck;
     }
 
     static async deleteTruck(id) {

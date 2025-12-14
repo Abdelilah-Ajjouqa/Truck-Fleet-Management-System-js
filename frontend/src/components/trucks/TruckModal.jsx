@@ -35,11 +35,12 @@ const TruckModal = ({ isOpen, onClose, truckToEdit }) => {
         e.preventDefault();
         
         if (truckToEdit) {
-            dispatch(updateTruck({ id: truckToEdit._id, data: formData }));
+            const { _id, createdAt, updatedAt, __v, assignedDriver, ...cleanData } = formData;
+            dispatch(updateTruck({ id: truckToEdit._id, data: cleanData }));
         } else {
             dispatch(createTruck(formData));
         }
-        onClose();
+        onClose(); 
     };
 
     return (

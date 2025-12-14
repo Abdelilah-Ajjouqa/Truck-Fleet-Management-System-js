@@ -23,11 +23,14 @@ export const login = createAsyncThunk(
     }
 )
 
+const user = JSON.parse(localStorage.getItem('user'));
+const token = localStorage.getItem('token');
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
-        user: null,
-        token: localStorage.getItem('token') || null,
+        user: user ? user : null,
+        token: token ? token : null,
         loading: false,
         error: null
     },
@@ -36,6 +39,7 @@ const authSlice = createSlice({
             state.error = null;
         },
         logout: (state) => {
+            localStorage.removeItem('user');
             localStorage.removeItem('token');
             state.user = null;
             state.token = null;
@@ -52,9 +56,11 @@ const authSlice = createSlice({
             })
             .addCase(register.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = null;
-                state.user = action.payload.user;
+                state.isSuccess = true;
+                state.user = action.payload;
                 state.token = action.payload.token;
+                localStorage.setItem('user', JSON.stringify(action.payload));
+                localStorage.setItem('token', action.payload.token);
             })
             .addCase(register.rejected, (state, action) => {
                 state.loading = false;
@@ -67,10 +73,12 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(login.fulfilled, (state, action) => {
-                state.loading = false;
-                state.error = null;
+                state.isLoading = false;
+                state.isSuccess = true;
                 state.user = action.payload.user;
                 state.token = action.payload.token;
+                localStorage.setItem('user', JSON.stringify(action.payload.user));
+                localStorage.setItem('token', action.payload.token);
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
