@@ -7,7 +7,7 @@ const appStore = configureStore({
     reducer: {
         auth: authReducer,
         trucks: truckReducer,
-        trailer: trailerReducer,
+        trailers: trailerReducer,
     }
 })
 

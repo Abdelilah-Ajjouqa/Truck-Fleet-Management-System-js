@@ -4,9 +4,9 @@ import Register from './components/auth/register';
 import Home from './components/Home';
 import PrivateLayout from './components/layouts/PrivateLayout';
 import TruckList from './components/trucks/TruckList';
+import TrailerList from './components/trailers/TrailerList';
 
 const Dashboard = () => <h1 className="text-2xl font-bold">Dashboard Overview</h1>;
-const TrailerList = () => <h1 className="text-2xl font-bold">Trailer Management</h1>;
 const TripList = () => <h1 className="text-2xl font-bold">Trip Management</h1>;
 
 function App() {
