@@ -5,9 +5,9 @@ import Home from './components/Home';
 import PrivateLayout from './components/layouts/PrivateLayout';
 import TruckList from './components/trucks/TruckList';
 import TrailerList from './components/trailers/TrailerList';
+import TripList from './components/trips/TripList';
 
 const Dashboard = () => <h1 className="text-2xl font-bold">Dashboard Overview</h1>;
-const TripList = () => <h1 className="text-2xl font-bold">Trip Management</h1>;
 
 function App() {
   return (
@@ -28,6 +28,7 @@ function App() {
         <Route element={<PrivateLayout allowedRoles={['ADMIN']} />}>
             <Route path="/trucks" element={<TruckList />} />
             <Route path="/trailers" element={<TrailerList />} />
+            <Route path="/trips" element={<TripList />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />
