@@ -24,6 +24,15 @@ class AuthController {
     static me = (req, res) => {
         res.status(200).json({ me: req.user })
     }
+
+    static getDrivers = async (req, res, next) => {
+        try {
+            const drivers = await User.find({ role: 'DRIVER' }).select('_id firstName lastName');
+            res.status(200).json(drivers);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default AuthController;
