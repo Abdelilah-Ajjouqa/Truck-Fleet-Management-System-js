@@ -17,6 +17,15 @@ export const createTrip = createAsyncThunk('trips/create', async (data, thunkAPI
     }
 });
 
+export const updateTripStatus = createAsyncThunk('trips/updateStatus', async ({ id, data }, thunkAPI) => {
+    try {
+        return await tripService.updateTripStatus(id, data);
+    } catch (error) {
+        const message = error.response?.data?.message || error.message;
+        return thunkAPI.rejectWithValue(message);
+    }
+});
+
 export const getTrips = createAsyncThunk('trips/getAll', async (_, thunkAPI) => {
     try {
         return await tripService.getTrips();
@@ -57,6 +66,14 @@ export const tripSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.trips.push(action.payload);
+            })
+            .addCase(updateTripStatus.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                const index = state.trips.findIndex(trip => trip._id === action.payload._id);
+                if (index !== -1) {
+                    state.trips[index] = action.payload;
+                }
             })
             .addCase(deleteTrip.fulfilled, (state, action) => {
                 state.isLoading = false;

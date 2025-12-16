@@ -69,7 +69,7 @@ const TripModal = ({ isOpen, onClose }) => {
 
                     {/* Date & Mileage */}
                     <div className="grid grid-cols-2 gap-4">
-                        <input type="date" name="startDate" required onChange={handleChange} className="border p-2 rounded w-full" />
+                        <input type="date" name="startDate" required onChange={handleChange} min={new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]} className="border p-2 rounded w-full" />
                         <input type="number" name="startMileage" required onChange={handleChange} placeholder="Start Mileage" className="border p-2 rounded w-full" />
                     </div>
 
@@ -82,18 +82,18 @@ const TripModal = ({ isOpen, onClose }) => {
 
                         <select name="truckId" required onChange={handleChange} className="border p-2 rounded w-full bg-white">
                             <option value="">Select Truck</option>
-                            {trucks?.map(t => (
+                            {trucks?.filter(t => t.status === 'AVAILABLE').map(t => (
                                 <option key={t._id} value={t._id}>
-                                    {t.matricule} - {t.model} {t.status !== 'AVAILABLE' ? '(Busy)' : ''}
+                                    {t.matricule} - {t.model}
                                 </option>
                             ))}
                         </select>
 
                         <select name="trailerId" required onChange={handleChange} className="border p-2 rounded w-full bg-white">
                             <option value="">Select Trailer</option>
-                            {trailers?.map(t => (
+                            {trailers?.filter(t => t.status === 'AVAILABLE').map(t => (
                                 <option key={t._id} value={t._id}>
-                                    {t.matricule} - {t.type} {t.status !== 'AVAILABLE' ? '(Busy)' : ''}
+                                    {t.matricule} - {t.type}
                                 </option>
                             ))}
                         </select>

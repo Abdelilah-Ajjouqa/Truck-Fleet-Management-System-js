@@ -14,6 +14,11 @@ const createTrip = async (tripData) => {
     return response.data;
 };
 
+const updateTripStatus = async (id, statusData) => {
+    const response = await axios.patch(API_URL + id + '/status', statusData, getConfig());
+    return response.data;
+};
+
 const getTrips = async () => {
     const response = await axios.get(API_URL, getToken());
     return response.data;
@@ -27,7 +32,8 @@ const deleteTrip = async (id) => {
 const tripService = {
     createTrip,
     getTrips,
-    deleteTrip
+    deleteTrip,
+    updateTripStatus
 };
 
 export default tripService;
