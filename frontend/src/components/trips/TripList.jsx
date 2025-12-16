@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTrips, deleteTrip } from '../../features/tripSlice';
-import { Map, Plus, Trash2, Truck, User, Calendar } from 'lucide-react';
+import { getTrips, deleteTrip, updateTripStatus } from '../../features/tripSlice';
+import { Map, Plus, Trash2, Truck, User, Calendar, Play, CheckSquare } from 'lucide-react';
 import TripModal from './TripModal';
+import CompleteTripModal from './CompleteTripModal';
 
 const TripList = () => {
     const dispatch = useDispatch();
@@ -10,23 +11,47 @@ const TripList = () => {
     const { trips, isLoading, isError, message } = useSelector((state) => state.trips);
     const { user } = useSelector((state) => state.auth);
     
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+    const [selectedTrip, setSelectedTrip] = useState(null);
 
     useEffect(() => {
         dispatch(getTrips());
     }, [dispatch]);
 
+    // Admin: Delete
     const handleDelete = (id) => {
         if (window.confirm('Are you sure you want to cancel this mission?')) {
             dispatch(deleteTrip(id));
         }
     };
 
-    // Status Badge Helper
+    // Driver: Start Trip
+    const handleStartTrip = async (id) => {
+        if(window.confirm('Start this mission now? Status will change to IN PROGRESS.')) {
+            try {
+                // 1. Update the status and wait for completion
+                await dispatch(updateTripStatus({ id, data: { status: 'IN_PROGRESS' } })).unwrap();
+                // 2. Refresh the list to get updated data
+                await dispatch(getTrips()).unwrap();
+            } catch (error) {
+                console.error('Failed to start trip:', error);
+                alert('Failed to start mission. Please try again.');
+            }
+        }
+    };
+
+    // Driver: Open Complete Modal
+    const openCompleteModal = (trip) => {
+        setSelectedTrip(trip);
+        setIsCompleteModalOpen(true);
+    };
+
+    // Helper: Badge Colors
     const getStatusStyle = (status) => {
         switch (status) {
             case 'PLANNED': return 'bg-blue-100 text-blue-700 border-blue-200';
-            case 'IN_PROGRESS': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+            case 'IN_PROGRESS': return 'bg-yellow-100 text-yellow-800 border-yellow-200 animate-pulse';
             case 'COMPLETED': return 'bg-green-100 text-green-700 border-green-200';
             default: return 'bg-gray-100 text-gray-600';
         }
@@ -45,13 +70,14 @@ const TripList = () => {
                         <Map className="w-8 h-8" />
                         Mission Control
                     </h1>
-                    <p className="text-gray-500 text-sm">Manage fleet schedules and assignments.</p>
+                    <p className="text-gray-500 text-sm">
+                        {user.role === 'ADMIN' ? 'Manage fleet schedules.' : 'My assigned missions.'}
+                    </p>
                 </div>
                 
-                {/* Only Admin can add trips */}
                 {user.role === 'ADMIN' && (
                     <button 
-                        onClick={() => setIsModalOpen(true)} 
+                        onClick={() => setIsCreateModalOpen(true)} 
                         className="flex items-center gap-2 bg-black hover:bg-zinc-800 text-white px-4 py-2 rounded-lg transition-colors shadow-lg"
                     >
                         <Plus size={20} />
@@ -64,7 +90,7 @@ const TripList = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {trips && trips.length > 0 ? (
                     trips.map((trip) => (
-                        <div key={trip._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                        <div key={trip._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
                             
                             {/* Route & Status */}
                             <div className="flex justify-between items-start mb-4">
@@ -82,7 +108,8 @@ const TripList = () => {
                                 </span>
                             </div>
 
-                            <div className="space-y-3 text-sm text-gray-600 mb-6 bg-gray-50 p-3 rounded-lg">
+                            {/* Info */}
+                            <div className="space-y-3 text-sm text-gray-600 mb-6 bg-gray-50 p-3 rounded-lg flex-grow">
                                 <div className="flex items-center gap-3">
                                     <Truck size={16} className="text-gray-400" />
                                     <span className="font-medium">
@@ -97,17 +124,36 @@ const TripList = () => {
                                 </div>
                             </div>
 
-                            {/* Actions */}
-                            {user.role === 'ADMIN' && (
-                                <div className="pt-4 border-t border-gray-100 flex justify-end">
+                            {/* BUTTONS AREA */}
+                            <div className="pt-4 border-t border-gray-100 mt-auto">
+                                
+                                {user.role === 'DRIVER' && trip.status === 'PLANNED' && (
+                                    <button 
+                                        onClick={() => handleStartTrip(trip._id)}
+                                        className="w-full py-2 bg-black hover:bg-zinc-800 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-colors shadow-lg"
+                                    >
+                                        <Play size={16} /> Start Mission
+                                    </button>
+                                )}
+
+                                {user.role === 'DRIVER' && trip.status === 'IN_PROGRESS' && (
+                                    <button 
+                                        onClick={() => openCompleteModal(trip)}
+                                        className="w-full py-2 bg-black hover:bg-zinc-800 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-colors shadow-lg"
+                                    >
+                                        <CheckSquare size={16} /> Complete Mission
+                                    </button>
+                                )}
+
+                                {user.role === 'ADMIN' && (
                                     <button 
                                         onClick={() => handleDelete(trip._id)}
-                                        className="text-xs font-medium text-red-600 hover:bg-red-50 px-3 py-2 rounded transition-colors flex items-center gap-1"
+                                        className="w-full py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors"
                                     >
-                                        <Trash2 size={14} /> Cancel Mission
+                                        <Trash2 size={16} /> Cancel Mission
                                     </button>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
                     ))
                 ) : (
@@ -119,9 +165,19 @@ const TripList = () => {
                 )}
             </div>
 
+            {/* Modals */}
             <TripModal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
+                isOpen={isCreateModalOpen} 
+                onClose={() => setIsCreateModalOpen(false)} 
+            />
+            
+            <CompleteTripModal 
+                isOpen={isCompleteModalOpen} 
+                onClose={() => {
+                    setIsCompleteModalOpen(false);
+                    dispatch(getTrips());
+                }}
+                trip={selectedTrip}
             />
         </div>
     );

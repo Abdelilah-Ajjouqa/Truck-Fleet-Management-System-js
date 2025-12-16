@@ -15,7 +15,7 @@ const createTrip = async (tripData) => {
 };
 
 const updateTripStatus = async (id, statusData) => {
-    const response = await axios.patch(API_URL + id + '/status', statusData, getConfig());
+    const response = await axios.patch(API_URL + id + '/status', statusData, getToken());
     return response.data;
 };
 

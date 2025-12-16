@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', authMiddleware, TripController.getMyTrips);
 router.patch('/:id/status', authMiddleware, TripController.updateStatus);
-
 router.post('/', authMiddleware, isAdmin, TripController.createTrip);
+router.delete('/:id', authMiddleware, isAdmin, TripController.deleteTrip);
 
 export default router;

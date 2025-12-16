@@ -91,6 +91,22 @@ class TripService {
         return trip;
     }
 
+    static async deleteTrip(tripId) {
+        const trip = await Trip.findById(tripId);
+        if (!trip) throw new HttpError('Trip not found', 404);
+
+        if (trip.status !== 'COMPLETED') {
+            const Truck = await import('../models/Truck.js').then(m => m.default);
+            const Trailer = await import('../models/Trailer.js').then(m => m.default);
+
+            await Truck.findByIdAndUpdate(trip.truck, { status: 'AVAILABLE' });
+            await Trailer.findByIdAndUpdate(trip.trailer, { status: 'AVAILABLE' });
+        }
+
+        await Trip.findByIdAndDelete(tripId);
+        return { message: 'Trip deleted successfully' };
+    }
+
     static async getTrips(userId, role) {
         let query = {};
         if (role === 'DRIVER') {

@@ -29,6 +29,15 @@ class TripController {
             next(error);
         }
     }
+
+    static deleteTrip = async (req, res, next) => {
+        try {
+            const result = await TripService.deleteTrip(req.params.id);
+            res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default TripController;
