@@ -98,6 +98,9 @@ class TripService {
         }
 
         return await Trip.find(query)
+            .populate('truck', 'matricule model')
+            .populate('trailer', 'matricule type')
+            .populate('driver', 'firstName lastName')
             .sort({ startDate: -1 });
     }
 }

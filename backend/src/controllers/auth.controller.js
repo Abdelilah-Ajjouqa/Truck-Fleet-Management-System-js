@@ -1,4 +1,5 @@
 import AuthService from '../services/authService.js';
+import User from '../models/User.js';
 
 class AuthController {
     static register = async (req, res, next) => {
