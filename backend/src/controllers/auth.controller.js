@@ -1,4 +1,5 @@
 import AuthService from '../services/authService.js';
+import User from '../models/User.js';
 
 class AuthController {
     static register = async (req, res, next) => {
@@ -23,6 +24,15 @@ class AuthController {
 
     static me = (req, res) => {
         res.status(200).json({ me: req.user })
+    }
+
+    static getDrivers = async (req, res, next) => {
+        try {
+            const drivers = await User.find({ role: 'DRIVER' }).select('_id firstName lastName');
+            res.status(200).json(drivers);
+        } catch (error) {
+            next(error);
+        }
     }
 }
 

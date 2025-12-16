@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = import.meta.env.BACKEND_URL || 'http://localhost:3002';
+const url = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
 
 export const register = async (userData) => {
     try {
@@ -12,7 +12,7 @@ export const register = async (userData) => {
             return null;
         }
     } catch (error) {
-        const errorMessage = error.response?.data?.message || error.message || 'Registration failed';
+        const errorMessage = error.response?.data?.message || 'Registration failed';
         throw new Error(`Cannot register: ${errorMessage}`);
     }
 }
@@ -27,7 +27,16 @@ export const login = async (userData) => {
             return null;
         }
     } catch (error) {
-        const errorMessage = error.response?.data?.message || error.message || 'Login failed';
+        const errorMessage = error.response?.data?.message || 'Login failed';
         throw new Error(`Cannot login: ${errorMessage}`);
+    }
+}
+
+export const getDrivers = async ()=>{
+    try {
+        const res = axios.get(`${url}/api/auth/drivers`);
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || 'Cannot get drivers';
+        throw new Error(`Cannot get drivers: ${errorMessage}`);
     }
 }

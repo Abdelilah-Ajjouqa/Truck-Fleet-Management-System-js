@@ -8,6 +8,7 @@ app.post('/register', AuthController.register);
 app.post('/login', AuthController.login);
 
 app.get('/me', authMiddleware, AuthController.me);
+app.get('/drivers', authMiddleware, AuthController.getDrivers);
 
 
 export default app;
