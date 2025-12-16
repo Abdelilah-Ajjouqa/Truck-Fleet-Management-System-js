@@ -1,0 +1,39 @@
+import AuthService from '../services/authService.js';
+import User from '../models/User.js';
+
+class AuthController {
+    static register = async (req, res, next) => {
+        try {
+            const data = req.body;
+            const result = await AuthService.register(data);
+            res.status(201).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static login = async (req, res, next) => {
+        try {
+            const { email, password } = req.body;
+            const result = await AuthService.login(email, password);
+            res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static me = (req, res) => {
+        res.status(200).json({ me: req.user })
+    }
+
+    static getDrivers = async (req, res, next) => {
+        try {
+            const drivers = await User.find({ role: 'DRIVER' }).select('_id firstName lastName');
+            res.status(200).json(drivers);
+        } catch (error) {
+            next(error);
+        }
+    }
+}
+
+export default AuthController;
