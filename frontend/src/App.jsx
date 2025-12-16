@@ -6,8 +6,8 @@ import PrivateLayout from './components/layouts/PrivateLayout';
 import TruckList from './components/trucks/TruckList';
 import TrailerList from './components/trailers/TrailerList';
 import TripList from './components/trips/TripList';
+import Dashboard from './components/Dashboard';
 
-const Dashboard = () => <h1 className="text-2xl font-bold">Dashboard Overview</h1>;
 
 function App() {
   return (
