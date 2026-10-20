@@ -3,18 +3,20 @@ version: "3.9"
 services:
   mongo:
     image: mongo:7
-    container_name: mongo
+    container_name: truckfleet-mongo
     ports:
-      - "27017:27017"
+      - "27021:27017"
     volumes:
       - mongo-data:/data/db
 
   backend:
     build:
       context: ./backend
-    container_name: backend
+    container_name: truckfleet-backend
     environment:
       - MONGO_URL=mongodb://mongo:27017/truckfleet
+      - JWT_SECRET=truckfleet_super_secret_jwt_key_2026_demo
+      - JWT_EXPIRES_IN=7d
       - NODE_ENV=development
     ports:
       - "3002:3002"
@@ -28,7 +30,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    container_name: frontend
+    container_name: truckfleet-frontend
     environment:
       - VITE_BACKEND_URL=http://localhost:3002
     ports:
