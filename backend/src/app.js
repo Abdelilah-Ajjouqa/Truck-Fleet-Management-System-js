@@ -25,9 +25,7 @@ app.use('/api/trucks', TruckRoutes);
 app.use('/api/trailers', TrailerRoutes)
 app.use('/api/trips', TripRouter);
 
-app.get('/', () => {
-    console.log('app running on : http://localhost:3002');
-});
+app.get('/', (req, res) => { res.json({ status: 'ok', message: 'Truck Fleet API running' }); });
 
 app.use(ErrorHandler);
 process.once('SIGINT', db.disconnect);
